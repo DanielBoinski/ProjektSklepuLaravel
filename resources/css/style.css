@@ -398,3 +398,16 @@ a:hover {
     background-color: #E9F5F0;
     font-size: 1.6rem;
 }
+/* Mały badge z liczbą produktów w koszyku */
+.cart-count-badge {
+    display: inline-block;
+    min-width: 18px;
+    padding: 2px 6px;
+    margin-left: 4px;
+    border-radius: 999px;
+    background-color: #FFB703;
+    color: #1F2933;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-align: center;
+}

@@ -7,58 +7,71 @@
 </head>
 <body>
 <div class="site-wrapper">
-
     <header class="site-header">
         <div class="header-inner">
 
-            {{-- LEWA STRONA: logo + główne linki --}}
-            <div style="display: flex; align-items: center; gap: 32px;">
-                <div class="logo">
-                    <a href="{{ route('home') }}" style="color: #ffffff; text-decoration: none;">
-                        Sklep<span style="color:#FFB703;">Online</span>
-                    </a>
-                </div>
-
-                <nav>
-                    <a href="{{ route('home') }}">Strona główna</a>
-                    <a href="{{ route('shop') }}">Asortyment</a>
-
-                    {{-- Panel admina widoczny TYLKO dla admina --}}
-                    @if(auth()->check() && auth()->user()->role === 'admin')
-                        <a href="{{ route('admin.dashboard') }}">Panel admina</a>
-                    @endif
-                </nav>
+            {{-- Logo --}}
+            <div class="logo">
+                Sklep<span style="color:#FFB703;">Online</span>
             </div>
 
-            {{-- PRAWA STRONA: logowanie / panel użytkownika / koszyk --}}
+            {{-- Proste policzenie ilości sztuk w koszyku --}}
+            @php
+                $cart = session('cart', []);
+                $cartCount = 0;
+                foreach ($cart as $item) {
+                    $cartCount += $item['quantity'];
+                }
+            @endphp
+
             <nav>
+                <a href="{{ route('home') }}">Strona główna</a>
+                <a href="{{ route('shop') }}">Asortyment</a>
+
                 @auth
                     @if(auth()->user()->role === 'client')
-                        <a href="{{ route('cart.index') }}">Koszyk</a>
+                        {{-- Link do koszyka z licznikiem --}}
+                        <a href="{{ route('cart.index') }}">
+                            Koszyk
+                            @if($cartCount > 0)
+                                <span class="cart-count-badge">{{ $cartCount }}</span>
+                            @endif
+                        </a>
+
                         <a href="{{ route('client.dashboard') }}">Panel klienta</a>
                     @elseif(auth()->user()->role === 'admin')
-                        {{-- Admin ma osobny link po lewej, tutaj można zostawić sam napis --}}
-                        <span style="color:#E9F5F0; margin-right: 10px;">Admin</span>
+                        <a href="{{ route('admin.dashboard') }}">Panel admina</a>
                     @elseif(auth()->user()->role === 'moderator')
                         <a href="{{ route('moderator.dashboard') }}">Panel moderatora</a>
                     @endif
 
                     <form action="{{ route('logout') }}" method="POST" style="display:inline;">
                         @csrf
-                        <button type="submit" class="btn btn-link" style="color:#FFB703;">
-                            Wyloguj
-                        </button>
+                        <button type="submit" class="btn btn-link" style="color:#E9F5F0;">Wyloguj</button>
                     </form>
                 @else
                     <a href="{{ route('login') }}">Zaloguj</a>
                     <a href="{{ route('register') }}">Rejestracja</a>
                 @endauth
             </nav>
-
         </div>
     </header>
 
     <main class="site-main">
+
+        {{-- GLOBALNE KOMUNIKATY (flash messages) --}}
+        @if (session('success'))
+            <div class="alert alert-success mt-2">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div class="alert alert-error mt-2">
+                {{ session('error') }}
+            </div>
+        @endif
+
         @yield('content')
     </main>
 
