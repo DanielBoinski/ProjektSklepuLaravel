@@ -13,7 +13,7 @@ class AdminUserSeeder extends Seeder
      */
     public function run(): void
     {
-        // Sprawdzamy, czy admin już istnieje
+        
         if (!User::where('email', 'admin@sklep.test')->exists()) {
             User::create([
                 'name' => 'Administrator',

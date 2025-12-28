@@ -12,9 +12,9 @@ use App\Http\Controllers\OrderController;
 use App\Models\Product;
 
 
-// Strona główna - widoczna dla wszystkich
+
 Route::get('/', function () {
-    // pobierz 3 LOSOWE produkty (jeśli są)
+   
     $products = Product::inRandomOrder()->take(3)->get();
 
     return view('home', compact('products'));
@@ -22,17 +22,16 @@ Route::get('/', function () {
 
 
 
-// Pełny asortyment - widoczny dla wszystkich (z wyszukiwarką + paginacją)
 Route::get('/sklep', function (Request $request) {
 
     $query = Product::query();
 
-    // jeśli podano frazę q w adresie (np. /sklep?q=buty)
+
     if ($request->filled('q')) {
         $query->where('name', 'like', '%' . $request->q . '%');
     }
 
-    // paginacja po 5 produktów na stronę
+
     $products = $query->paginate(5);
 
     return view('shop', [
@@ -42,30 +41,29 @@ Route::get('/sklep', function (Request $request) {
 })->name('shop');
 
 
-// Formularz logowania
+
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 
-// Obsługa logowania (POST)
+
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 
-// Formularz rejestracji
+
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
-// Obsługa rejestracji (POST)
+
 Route::post('/register', [AuthController::class, 'register'])->name('register.post');
 
-// Wylogowanie
+
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
-// Grupa dla ADMINA
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
 
-    // Dashboard admina
+
     Route::get('/', function () {
         return view('admin.dashboard');
     })->name('dashboard');
 
-    // Użytkownicy (CRUD)
+
     Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
     Route::get('/users/create', [AdminUserController::class, 'create'])->name('users.create');
     Route::post('/users', [AdminUserController::class, 'store'])->name('users.store');
@@ -74,12 +72,12 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::put('/users/{id}', [AdminUserController::class, 'update'])->name('users.update');
     Route::delete('/users/{id}', [AdminUserController::class, 'destroy'])->name('users.destroy');
 
-    // Wszystkie zamówienia
+
     Route::get('/orders', [OrderController::class, 'adminIndex'])->name('orders');
 });
 
 
-// Grupa dla MODERATORA
+
 Route::middleware(['auth', 'role:moderator'])->prefix('moderator')->name('moderator.')->group(function () {
     Route::get('/', function () {
         return view('moderator.dashboard');
@@ -87,18 +85,18 @@ Route::middleware(['auth', 'role:moderator'])->prefix('moderator')->name('modera
 });
 
 
-// Grupa dla KLIENTA
+
 Route::middleware(['auth', 'role:client'])->prefix('client')->name('client.')->group(function () {
     Route::get('/', function () {
         return view('client.dashboard');
     })->name('dashboard');
 
-    // Historia zamówień klienta
+
     Route::get('/orders', [OrderController::class, 'clientIndex'])->name('orders');
 });
 
 
-// Produkty - zarządzanie (admin i moderator)
+
 Route::middleware(['auth', 'role:admin,moderator'])
     ->prefix('products')
     ->name('products.')
@@ -112,7 +110,7 @@ Route::middleware(['auth', 'role:admin,moderator'])
     });
 
 
-// Koszyk - tylko klient
+
 Route::middleware(['auth', 'role:client'])->group(function () {
     Route::get('/koszyk', [CartController::class, 'index'])->name('cart.index');
     Route::get('/koszyk/dodaj/{id}', [CartController::class, 'add'])->name('cart.add');

@@ -8,9 +8,7 @@ use Illuminate\Support\Facades\Hash;
 
 class AdminUserController extends Controller
 {
-    /**
-     * Lista wszystkich użytkowników
-     */
+   
     public function index()
     {
         $users = User::all();
@@ -18,20 +16,16 @@ class AdminUserController extends Controller
         return view('admin.users.index', compact('users'));
     }
 
-    /**
-     * Formularz dodawania użytkownika
-     */
+ 
     public function create()
     {
         return view('admin.users.create');
     }
 
-    /**
-     * Zapis nowego użytkownika
-     */
+   
     public function store(Request $request)
     {
-        // Walidacja
+        
         $request->validate([
             'name'     => 'required|string|max:255',
             'email'    => 'required|email|unique:users,email',
@@ -39,7 +33,7 @@ class AdminUserController extends Controller
             'role'     => 'required|in:admin,moderator,client',
         ]);
 
-        // Utworzenie użytkownika
+        
         User::create([
             'name'     => $request->name,
             'email'    => $request->email,
@@ -51,9 +45,7 @@ class AdminUserController extends Controller
             ->with('success', 'Użytkownik został dodany.');
     }
 
-    /**
-     * Szczegóły jednego użytkownika
-     */
+   
     public function show($id)
     {
         $user = User::findOrFail($id);
@@ -61,9 +53,7 @@ class AdminUserController extends Controller
         return view('admin.users.show', compact('user'));
     }
 
-    /**
-     * Formularz edycji użytkownika
-     */
+   
     public function edit($id)
     {
         $user = User::findOrFail($id);
@@ -71,14 +61,12 @@ class AdminUserController extends Controller
         return view('admin.users.edit', compact('user'));
     }
 
-    /**
-     * Zapis edycji użytkownika
-     */
+    
     public function update(Request $request, $id)
     {
         $user = User::findOrFail($id);
 
-        // Walidacja
+        
         $request->validate([
             'name'  => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
@@ -90,7 +78,7 @@ class AdminUserController extends Controller
         $user->email = $request->email;
         $user->role  = $request->role;
 
-        // Hasło zmieniamy tylko jeśli coś wpisano
+        
         if ($request->filled('password')) {
             $user->password = Hash::make($request->password);
         }
@@ -101,14 +89,12 @@ class AdminUserController extends Controller
             ->with('success', 'Dane użytkownika zostały zaktualizowane.');
     }
 
-    /**
-     * Usuwanie użytkownika
-     */
+   
     public function destroy($id)
     {
         $user = User::findOrFail($id);
 
-        // Proste zabezpieczenie, żeby nie usunąć siebie
+      
         if (auth()->id() === $user->id) {
             return redirect()->route('admin.users.index')
                 ->with('error', 'Nie możesz usunąć aktualnie zalogowanego użytkownika.');

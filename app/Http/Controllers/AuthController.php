@@ -9,20 +9,16 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    /**
-     * Formularz logowania
-     */
+    
     public function showLoginForm()
     {
         return view('auth.login');
     }
 
-    /**
-     * Obsługa logowania
-     */
+  
     public function login(Request $request)
     {
-        // Walidacja podstawowa
+        
         $request->validate([
             'email'    => 'required|email',
             'password' => 'required',
@@ -49,28 +45,24 @@ class AuthController extends Controller
         ])->onlyInput('email');
     }
 
-    /**
-     * Formularz rejestracji
-     */
+    
     public function showRegisterForm()
     {
         return view('auth.register');
     }
 
-    /**
-     * Obsługa rejestracji
-     */
+   
     public function register(Request $request)
     {
-        // Walidacja
+       
         $request->validate([
             'name'                  => 'required|string|max:255',
             'email'                 => 'required|email|unique:users,email',
             'password'              => 'required|min:6|confirmed',
-            // password_confirmation musi być w formularzu
+           
         ]);
 
-        // Tworzymy użytkownika z rolą 'client'
+        
         $user = User::create([
             'name'     => $request->name,
             'email'    => $request->email,
@@ -78,16 +70,14 @@ class AuthController extends Controller
             'role'     => 'client',
         ]);
 
-        // Automatyczne logowanie
+        
         Auth::login($user);
         $request->session()->regenerate();
 
         return redirect()->route('client.dashboard');
     }
 
-    /**
-     * Wylogowanie
-     */
+    
     public function logout(Request $request)
     {
         Auth::logout();

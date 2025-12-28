@@ -7,9 +7,7 @@ use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
-    /**
-     * Historia zamówień zalogowanego klienta
-     */
+    
     public function clientIndex()
     {
         $orders = Order::where('user_id', auth()->id())
@@ -20,9 +18,7 @@ class OrderController extends Controller
         return view('client.orders', compact('orders'));
     }
 
-    /**
-     * Lista wszystkich zamówień dla admina
-     */
+   
     public function adminIndex()
     {
         $orders = Order::with('user', 'items.product')

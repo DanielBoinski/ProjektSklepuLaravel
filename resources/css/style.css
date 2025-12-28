@@ -1,4 +1,4 @@
-/* ===== Reset / bazowe ===== */
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -12,7 +12,7 @@ body {
     line-height: 1.5;
 }
 
-/* ===== Layout główny ===== */
+
 
 .site-wrapper {
     min-height: 100vh;
@@ -70,7 +70,7 @@ nav a:hover {
     font-size: 0.85rem;
 }
 
-/* ===== Karty / sekcje ===== */
+
 
 .card {
     background-color: #FFFFFF;
@@ -86,7 +86,7 @@ nav a:hover {
     margin-bottom: 12px;
 }
 
-/* ===== Tabele ===== */
+
 
 table.table {
     width: 100%;
@@ -113,7 +113,7 @@ table.table {
     background-color: #F4F6F8;
 }
 
-/* ===== Formularze ===== */
+
 
 .form-group {
     margin-bottom: 12px;
@@ -152,7 +152,7 @@ select:focus {
     box-shadow: 0 0 0 1px rgba(64,145,108,0.25);
 }
 
-/* ===== Przyciski / linki ===== */
+
 
 .btn {
     display: inline-block;
@@ -203,7 +203,7 @@ select:focus {
     text-decoration: underline;
 }
 
-/* ===== Alerty ===== */
+
 
 .alert {
     padding: 10px 12px;
@@ -222,7 +222,7 @@ select:focus {
     color: #B91C1C;
 }
 
-/* ===== Grid produktów ===== */
+
 
 .product-grid {
     display: grid;
@@ -257,7 +257,7 @@ select:focus {
     margin-bottom: 10px;
 }
 
-/* ===== Linki tekstowe ===== */
+
 
 a {
     color: #2D6A4F;
@@ -267,14 +267,14 @@ a:hover {
     color: #40916C;
 }
 
-/* ===== Sekcje autoryzacji ===== */
+
 
 .auth-wrapper {
     max-width: 420px;
     margin: 40px auto;
 }
 
-/* ===== Proste helpery ===== */
+
 
 .mt-1 { margin-top: 4px; }
 .mt-2 { margin-top: 8px; }
@@ -290,7 +290,7 @@ a:hover {
 .text-right { text-align: right; }
 .text-muted { color: #6B7280; }
 
-/* ===== HERO BANER + SEKCJE HOME ===== */
+
 
 .hero-section {
     margin-top: 24px;
@@ -343,7 +343,7 @@ a:hover {
     background-color: #f4a307;
 }
 
-/* ===== SEKCJE HOME ===== */
+
 
 .home-section {
     margin-top: 16px;
@@ -361,7 +361,7 @@ a:hover {
     margin-bottom: 18px;
 }
 
-/* ===== KAFELKI OFERTY ===== */
+
 
 .offer-grid {
     display: grid;
@@ -398,7 +398,7 @@ a:hover {
     background-color: #E9F5F0;
     font-size: 1.6rem;
 }
-/* Mały badge z liczbą produktów w koszyku */
+
 .cart-count-badge {
     display: inline-block;
     min-width: 18px;

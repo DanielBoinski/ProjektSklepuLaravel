@@ -7,9 +7,7 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    /**
-     * Lista produktów (dla admina i moderatora)
-     */
+    
     public function index()
     {
         $products = Product::all();
@@ -17,39 +15,35 @@ class ProductController extends Controller
         return view('products.index', compact('products'));
     }
 
-    /**
-     * Formularz dodawania produktu
-     */
+    
     public function create()
     {
         return view('products.create');
     }
 
-    /**
-     * Zapis nowego produktu
-     */
+   
     public function store(Request $request)
     {
-        // walidacja danych, z regexem dla nazwy + obrazek
+        
         $request->validate([
             'name'        => ['required', 'string', 'max:255', 'regex:/^[A-Za-z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ ]+$/u'],
             'price'       => 'required|numeric|min:0',
             'stock'       => 'required|integer|min:0',
             'description' => 'nullable|string',
-            'image'       => 'nullable|image|max:2048', // maks. ok. 2MB
+            'image'       => 'nullable|image|max:2048', 
         ]);
 
         $imagePath = null;
 
-        // jeśli przesłano plik ze zdjęciem
+       
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $filename = time() . '_' . $file->getClientOriginalName();
 
-            // zapisujemy do public/images/products
+           
             $file->move(public_path('images/products'), $filename);
 
-            // ścieżka zapisywana w bazie
+            
             $imagePath = 'images/products/' . $filename;
         }
 
@@ -65,9 +59,7 @@ class ProductController extends Controller
             ->with('success', 'Produkt został dodany.');
     }
 
-    /**
-     * Formularz edycji produktu
-     */
+    
     public function edit($id)
     {
         $product = Product::findOrFail($id);
@@ -75,14 +67,12 @@ class ProductController extends Controller
         return view('products.edit', compact('product'));
     }
 
-    /**
-     * Zapis edycji produktu
-     */
+    
     public function update(Request $request, $id)
     {
         $product = Product::findOrFail($id);
 
-        // walidacja z regexem i obrazkiem
+        
         $request->validate([
             'name'        => ['required', 'string', 'max:255', 'regex:/^[A-Za-z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ ]+$/u'],
             'price'       => 'required|numeric|min:0',
@@ -96,10 +86,10 @@ class ProductController extends Controller
         $product->stock       = $request->stock;
         $product->description = $request->description;
 
-        // jeśli dodano nowe zdjęcie
+        
         if ($request->hasFile('image')) {
 
-            // usuwamy stare, jeśli istnieje
+            
             if ($product->image_path && file_exists(public_path($product->image_path))) {
                 @unlink(public_path($product->image_path));
             }
@@ -117,14 +107,11 @@ class ProductController extends Controller
             ->with('success', 'Produkt został zaktualizowany.');
     }
 
-    /**
-     * Usuwanie produktu
-     */
+   
     public function destroy($id)
     {
         $product = Product::findOrFail($id);
 
-        // usuwamy zdjęcie z dysku, jeśli jest
         if ($product->image_path && file_exists(public_path($product->image_path))) {
             @unlink(public_path($product->image_path));
         }

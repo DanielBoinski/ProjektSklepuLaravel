@@ -70,9 +70,9 @@ class Kernel extends HttpKernel
     'auth' => \App\Http\Middleware\Authenticate::class,
     'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
     'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
-    // ... inne wpisy ...
+    
 
-    'role' => \App\Http\Middleware\RoleMiddleware::class, // DODANE
+    'role' => \App\Http\Middleware\RoleMiddleware::class, 
 ];
 
 }
