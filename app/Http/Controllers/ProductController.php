@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -35,16 +36,8 @@ class ProductController extends Controller
 
         $imagePath = null;
 
-       
         if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $filename = time() . '_' . $file->getClientOriginalName();
-
-           
-            $file->move(public_path('images/products'), $filename);
-
-            
-            $imagePath = 'images/products/' . $filename;
+            $imagePath = $request->file('image')->store('products', 'public');
         }
 
         Product::create([
@@ -86,19 +79,13 @@ class ProductController extends Controller
         $product->stock       = $request->stock;
         $product->description = $request->description;
 
-        
         if ($request->hasFile('image')) {
-
-            
-            if ($product->image_path && file_exists(public_path($product->image_path))) {
-                @unlink(public_path($product->image_path));
+            // Usunięcie starego obrazu
+            if ($product->image_path && Storage::disk('public')->exists($product->image_path)) {
+                Storage::disk('public')->delete($product->image_path);
             }
 
-            $file = $request->file('image');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('images/products'), $filename);
-
-            $product->image_path = 'images/products/' . $filename;
+            $product->image_path = $request->file('image')->store('products', 'public');
         }
 
         $product->save();
@@ -107,13 +94,12 @@ class ProductController extends Controller
             ->with('success', 'Produkt został zaktualizowany.');
     }
 
-   
     public function destroy($id)
     {
         $product = Product::findOrFail($id);
 
-        if ($product->image_path && file_exists(public_path($product->image_path))) {
-            @unlink(public_path($product->image_path));
+        if ($product->image_path && Storage::disk('public')->exists($product->image_path)) {
+            Storage::disk('public')->delete($product->image_path);
         }
 
         $product->delete();

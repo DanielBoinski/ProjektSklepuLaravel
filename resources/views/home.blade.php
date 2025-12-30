@@ -80,7 +80,7 @@
 
                         {{-- Zdjęcie produktu --}}
                         @if($product->image_path)
-                            <img src="{{ asset($product->image_path) }}"
+                            <img src="{{ asset('storage/' . $product->image_path) }}"
                                  alt="{{ $product->name }}"
                                  class="product-img">
                         @endif

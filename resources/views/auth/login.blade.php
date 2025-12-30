@@ -38,12 +38,12 @@
                 <a href="{{ route('register') }}">Zarejestruj się</a>
             </p>
 
-            <hr class="mt-3">
-
-            <p class="text-muted">
-                Dane admina (do testów):<br>
-                <strong>admin@sklep.test</strong> / <strong>admin123</strong>
-            </p>
+            @if(config('app.debug'))
+                <hr class="mt-3">
+                <p class="text-muted" style="font-size: 0.85rem;">
+                    <em>Tryb deweloperski - dane testowe dostępne w seederze.</em>
+                </p>
+            @endif
         </div>
     </div>
 @endsection

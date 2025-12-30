@@ -34,7 +34,7 @@
 
                         {{-- ZDJĘCIE --}}
                         @if($product->image_path)
-                            <img src="{{ asset($product->image_path) }}"
+                            <img src="{{ asset('storage/' . $product->image_path) }}"
                                  alt="{{ $product->name }}"
                                  class="product-img">
                         @endif
@@ -54,10 +54,12 @@
                         <div class="mt-2">
                             @auth
                                 @if(auth()->user()->role === 'client')
-                                    <a href="{{ route('cart.add', $product->id) }}"
-                                       class="btn btn-primary">
-                                        Dodaj do koszyka
-                                    </a>
+                                    <form action="{{ route('cart.add', $product->id) }}" method="POST" style="display:inline;">
+                                        @csrf
+                                        <button type="submit" class="btn btn-primary">
+                                            Dodaj do koszyka
+                                        </button>
+                                    </form>
                                 @else
                                     <span class="text-muted">Zalogowano jako {{ auth()->user()->role }}</span>
                                 @endif

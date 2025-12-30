@@ -38,7 +38,11 @@
                             <td>{{ $item['quantity'] }}</td>
                             <td>{{ number_format($line, 2, ',', ' ') }} zł</td>
                             <td>
-                                <a href="{{ route('cart.remove', $id) }}" class="btn btn-danger">Usuń</a>
+                                <form action="{{ route('cart.remove', $id) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger">Usuń</button>
+                                </form>
                             </td>
                         </tr>
                     @endforeach
@@ -51,8 +55,11 @@
             </table>
 
             <div class="mt-3">
-                <a href="{{ route('cart.checkout') }}" class="btn btn-primary">Złóż zamówienie</a>
-                <a href="{{ route('shop') }}" class="btn btn-secondary">Kontynuuj zakupy</a>
+                <form action="{{ route('cart.checkout') }}" method="POST" style="display:inline;">
+                    @csrf
+                    <button type="submit" class="btn btn-primary">Złóż zamówienie</button>
+                </form>
+                <a href="{{ route('shop') }}" class="btn btn-secondary" style="margin-left: 8px;">Kontynuuj zakupy</a>
             </div>
         @endif
     </div>

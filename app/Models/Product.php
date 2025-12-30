@@ -13,4 +13,12 @@ class Product extends Model
         'price',
         'stock',
     ];
+
+    /**
+     * Relacja: produkt ma wiele pozycji zamówień.
+     */
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
 }

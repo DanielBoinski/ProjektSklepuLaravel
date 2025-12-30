@@ -441,3 +441,107 @@ a:hover {
     word-break: break-word;
     white-space: normal;
 }
+
+/* ===== PAGINACJA ===== */
+
+.pagination-nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.pagination-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.pagination-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 20px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #FFFFFF;
+    background-color: #2D6A4F;
+    border: 2px solid #2D6A4F;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.15s ease;
+}
+
+.pagination-btn:hover {
+    background-color: #40916C;
+    border-color: #40916C;
+    color: #FFFFFF;
+}
+
+.pagination-btn-disabled {
+    color: #9CA3AF;
+    background-color: #E5E7EB;
+    border-color: #D1D5DB;
+    cursor: not-allowed;
+}
+
+.pagination-btn-disabled:hover {
+    background-color: #E5E7EB;
+    border-color: #D1D5DB;
+    color: #9CA3AF;
+}
+
+.pagination-pages {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.pagination-page {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    padding: 0 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #1F2933;
+    background-color: #FFFFFF;
+    border: 2px solid #CBD5E1;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.15s ease;
+}
+
+.pagination-page:hover {
+    background-color: #E9F5F0;
+    border-color: #2D6A4F;
+    color: #2D6A4F;
+}
+
+.pagination-page-active {
+    background-color: #FFB703;
+    border-color: #FFB703;
+    color: #1F2933;
+    font-weight: 700;
+}
+
+.pagination-page-active:hover {
+    background-color: #FFB703;
+    border-color: #FFB703;
+    color: #1F2933;
+}
+
+.pagination-dots {
+    padding: 0 8px;
+    color: #4B5563;
+    font-weight: 600;
+}
+
+.pagination-info {
+    font-size: 0.9rem;
+    color: #4B5563;
+}

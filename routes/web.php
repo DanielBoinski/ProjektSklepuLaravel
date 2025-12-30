@@ -113,7 +113,7 @@ Route::middleware(['auth', 'role:admin,moderator'])
 
 Route::middleware(['auth', 'role:client'])->group(function () {
     Route::get('/koszyk', [CartController::class, 'index'])->name('cart.index');
-    Route::get('/koszyk/dodaj/{id}', [CartController::class, 'add'])->name('cart.add');
-    Route::get('/koszyk/usun/{id}', [CartController::class, 'remove'])->name('cart.remove');
-    Route::get('/koszyk/zamow', [CartController::class, 'checkout'])->name('cart.checkout');
+    Route::post('/koszyk/dodaj/{id}', [CartController::class, 'add'])->name('cart.add');
+    Route::delete('/koszyk/usun/{id}', [CartController::class, 'remove'])->name('cart.remove');
+    Route::post('/koszyk/zamow', [CartController::class, 'checkout'])->name('cart.checkout');
 });

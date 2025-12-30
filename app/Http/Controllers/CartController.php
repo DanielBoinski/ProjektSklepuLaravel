@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CartController extends Controller
 {
@@ -57,10 +58,8 @@ class CartController extends Controller
             ->with('success', 'Produkt usunięty z koszyka.');
     }
 
-    
     public function checkout()
     {
-       
         $cart = session()->get('cart', []);
 
         if (empty($cart)) {
@@ -69,63 +68,62 @@ class CartController extends Controller
                 ->with('error', 'Koszyk jest pusty.');
         }
 
-        $total = 0;
+        try {
+            DB::transaction(function () use ($cart) {
+                $total = 0;
+                $orderItems = [];
 
-      
-        foreach ($cart as $productId => $item) {
-            $product = Product::find($productId);
+                // Sprawdzenie dostępności i obliczenie ceny w transakcji
+                foreach ($cart as $productId => $item) {
+                    $product = Product::lockForUpdate()->find($productId);
 
-           
-            if (!$product) {
-                return redirect()
-                    ->route('cart.index')
-                    ->with('error', 'Produkt o ID ' . $productId . ' został usunięty ze sklepu.');
-            }
+                    if (!$product) {
+                        throw new \Exception('Produkt o ID ' . $productId . ' został usunięty ze sklepu.');
+                    }
 
-            
-            if ($product->stock < $item['quantity']) {
-                return redirect()
-                    ->route('cart.index')
-                    ->with('error', 'Brak wystarczającej ilości produktu: ' . $product->name);
-            }
+                    if ($product->stock < $item['quantity']) {
+                        throw new \Exception('Brak wystarczającej ilości produktu: ' . $product->name);
+                    }
 
-            
-            $total += $product->price * $item['quantity'];
+                    $total += $product->price * $item['quantity'];
+
+                    $orderItems[] = [
+                        'product_id' => $productId,
+                        'quantity'   => $item['quantity'],
+                        'price'      => $product->price,
+                    ];
+                }
+
+                // Tworzenie zamówienia
+                $order = Order::create([
+                    'user_id'     => auth()->id(),
+                    'total_price' => $total,
+                ]);
+
+                // Tworzenie pozycji zamówienia i dekrementacja stocku
+                foreach ($orderItems as $index => $orderItem) {
+                    OrderItem::create([
+                        'order_id'   => $order->id,
+                        'product_id' => $orderItem['product_id'],
+                        'quantity'   => $orderItem['quantity'],
+                        'price'      => $orderItem['price'],
+                    ]);
+
+                    Product::where('id', $orderItem['product_id'])
+                        ->decrement('stock', $orderItem['quantity']);
+                }
+            });
+
+            session()->forget('cart');
+
+            return redirect()
+                ->route('client.dashboard')
+                ->with('success', 'Zamówienie zostało złożone, a stan magazynu zaktualizowany!');
+
+        } catch (\Exception $e) {
+            return redirect()
+                ->route('cart.index')
+                ->with('error', $e->getMessage());
         }
-
-       
-        $order = Order::create([
-            'user_id'     => auth()->id(),
-            'total_price' => $total,
-        ]);
-
-        
-        foreach ($cart as $productId => $item) {
-            $product = Product::find($productId);
-
-            if (!$product) {
-             
-                continue;
-            }
-
-            
-            OrderItem::create([
-                'order_id'   => $order->id,
-                'product_id' => $productId,
-                'quantity'   => $item['quantity'],
-                'price'      => $product->price, 
-            ]);
-
-            
-            $product->decrement('stock', $item['quantity']);
-           
-        }
-
-      
-        session()->forget('cart');
-
-        return redirect()
-            ->route('client.dashboard')
-            ->with('success', 'Zamówienie zostało złożone, a stan magazynu zaktualizowany!');
     }
 }

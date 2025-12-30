@@ -8,10 +8,9 @@ use Illuminate\Support\Facades\Hash;
 
 class AdminUserController extends Controller
 {
-   
     public function index()
     {
-        $users = User::all();
+        $users = User::orderBy('id', 'desc')->paginate(10);
 
         return view('admin.users.index', compact('users'));
     }
